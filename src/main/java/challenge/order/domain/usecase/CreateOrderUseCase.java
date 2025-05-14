@@ -10,7 +10,6 @@ import challenge.order.config.CreateOrderProperties;
 import challenge.order.domain.dataprovider.event.OrderCreatedEvent;
 import challenge.order.domain.dataprovider.event.OrderNotifier;
 import challenge.order.domain.dataprovider.repository.OrderRepository;
-import challenge.order.domain.entity.Order;
 import challenge.order.domain.exception.DuplicatedOrderException;
 import challenge.order.domain.service.CacheService;
 import challenge.order.domain.usecase.commands.CreateOrderCommand;
