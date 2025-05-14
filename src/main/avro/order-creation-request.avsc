@@ -1,0 +1,46 @@
+{
+  "type": "record",
+  "namespace": "challenge.order.events",
+  "name": "OrderCreationRequestSchema",
+  "fields": [
+    {
+      "name": "sellerId",
+      "doc": "Identifier seller that placed the order.",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "customerId",
+      "doc": "Identifier of the customer that placed the order",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "Item",
+          "fields": [
+            { "name": "quantity", "type": "long" },
+            {
+              "name": "price",
+              "type": { "type": "bytes", "logicalType": "decimal", "precision": 10, "scale": 2 }
+            },
+            { "name": "productId",
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+                }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

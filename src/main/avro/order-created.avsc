@@ -1,0 +1,68 @@
+{
+  "type": "record",
+  "namespace": "challenge.order.events",
+  "name": "OrderCreatedSchema",
+  "fields": [
+    {
+      "name": "orderId",
+      "doc": "Identifier of the Order that has been created.",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "sellerId",
+      "doc": "Identifier seller that placed the order.",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "customerId",
+      "doc": "Identifier of the customer that placed the order",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "totalPrice",
+      "doc": "Total order price",
+      "type": { "type": "bytes", "logicalType": "decimal", "precision": 10, "scale": 2 }
+    },
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "Item",
+          "fields": [
+            { "name": "quantity", "type": "long" },
+            {
+              "name": "price",
+              "type": { "type": "bytes", "logicalType": "decimal", "precision": 10, "scale": 2 }
+            },
+            { "name": "productId",
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+                }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "createdAt",
+      "doc": "Order date time creation",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    }
+  ]
+}
