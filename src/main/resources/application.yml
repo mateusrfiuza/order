@@ -1,0 +1,47 @@
+main.banner-mode: off
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ""
+      client-type: lettuce
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?schema=challenge
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        hibernate.format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+
+  kafka:
+    client-id: order-service
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service-consumer-group
+      auto-offset-reset: earliest
+    properties:
+      schema.registry.url: http://127.0.0.1:9081
+      auto.register.schemas: true
+      specific.avro.reader: true
+
+  docker:
+    compose:
+      enabled: true
+      file: src/main/resources/docker-compose.yml
+
+  threads:
+    virtual:
+      enabled: true
+
+order.event.destinationTopic.OrderCreatedEvent: order_created_event
+order.creation.deduplication.ttl.hours: 6
