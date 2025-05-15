@@ -57,6 +57,7 @@ Before you begin, ensure you have the following installed:
 ./gradlew test
 ```
 3. How to start the application:
+   - Docker service should be up!
 ```bash
 ./gradlew clean build bootRun
 ```
