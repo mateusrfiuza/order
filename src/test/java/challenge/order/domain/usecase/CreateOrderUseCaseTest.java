@@ -59,10 +59,10 @@ class CreateOrderUseCaseTest {
   @Test
   void execute_nullCommand_throwsNullPointerException() {
     var ex = assertThrows(
-        NullPointerException.class,
+        IllegalArgumentException.class,
         () -> useCase.execute(null)
     );
-    assertEquals("command cannot be null.", ex.getMessage());
+    assertEquals("command must not be null", ex.getMessage());
   }
 
   @Test

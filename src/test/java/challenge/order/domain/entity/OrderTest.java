@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.*;
 
@@ -33,8 +33,8 @@ class OrderTest {
   }
 
   @Test
-  void constructor_nullStatus_throwsNullPointerException() {
-    assertThatNullPointerException()
+  void constructor_nullStatus_throwsIllegalArgumentException() {
+    assertThatIllegalArgumentException()
         .isThrownBy(() -> new Order(
             id, customerId, sellerId,
             Set.of(item1),
@@ -42,12 +42,12 @@ class OrderTest {
             null,
             createdAt
         ))
-        .withMessage("status cannot be null");
+        .withMessage("status must not be null");
   }
 
   @Test
-  void constructor_nullCustomerId_throwsNullPointerException() {
-    assertThatNullPointerException()
+  void constructor_nullCustomerId_throwsIllegalArgumentException() {
+    assertThatIllegalArgumentException()
         .isThrownBy(() -> new Order(
             id, null, sellerId,
             Set.of(item1),
@@ -55,12 +55,12 @@ class OrderTest {
             OrderStatus.CREATED,
             createdAt
         ))
-        .withMessage("customerId cannot be null");
+        .withMessage("customerId must not be null");
   }
 
   @Test
-  void constructor_nullSellerId_throwsNullPointerException() {
-    assertThatNullPointerException()
+  void constructor_nullSellerId_throwsIllegalArgumentException() {
+    assertThatIllegalArgumentException()
         .isThrownBy(() -> new Order(
             id, customerId, null,
             Set.of(item1),
@@ -68,7 +68,7 @@ class OrderTest {
             OrderStatus.CREATED,
             createdAt
         ))
-        .withMessage("sellerId cannot be null");
+        .withMessage("sellerId must not be null");
   }
 
   @Test
@@ -81,7 +81,7 @@ class OrderTest {
             OrderStatus.CREATED,
             createdAt
         ))
-        .withMessage("Items cannot be empty");
+        .withMessage("items must not be empty");
   }
 
   @Test
@@ -176,7 +176,7 @@ class OrderTest {
   }
 
   @Test
-  void setStatus_null_throwsNullPointerException() {
+  void setStatus_null_throwsIllegalArgumentException() {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1),
@@ -185,9 +185,9 @@ class OrderTest {
         createdAt
     );
 
-    assertThatNullPointerException()
+    assertThatIllegalArgumentException()
         .isThrownBy(() -> order.setStatus(null))
-        .withMessage("status cannot be null");
+        .withMessage("status must not be null");
   }
 
   @Test

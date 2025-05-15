@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,22 +34,20 @@ public class Order {
                Instant createdAt) {
     this.id = id;
     this.createdAt = createdAt;
-    this.status = Objects.requireNonNull(status, "status cannot be null");
-    this.customerId = Objects.requireNonNull(customerId, "customerId cannot be null");
-    this.sellerId = Objects.requireNonNull(sellerId, "sellerId cannot be null");
 
-    if (CollectionUtils.isEmpty(items)) {
-      throw new IllegalArgumentException("Items cannot be empty");
-    }
-
+    this.customerId = DomainPreconditions.requireNonNull(customerId, "customerId must not be null");
+    this.sellerId = DomainPreconditions.requireNonNull(sellerId, "sellerId must not be null");
+    this.status = DomainPreconditions.requireNonNull(status, "status must not be null");
+    DomainPreconditions.requireNonEmpty(items, "items must not be empty");
     this.items.addAll(items);
+
     this.totalPrice = (totalPrice != null)
                       ? totalPrice
                       : recalculateTotal();
   }
 
   public void addItem(OrderItem item) {
-    Objects.requireNonNull(item, "orderItem cannot be null");
+    DomainPreconditions.requireNonNull(item, "item must not be null");
     items.add(item);
     this.totalPrice = recalculateTotal();
   }
@@ -62,7 +59,8 @@ public class Order {
   }
 
   public void setStatus(OrderStatus newStatus) {
-    this.status = Objects.requireNonNull(newStatus, "status cannot be null");
+    DomainPreconditions.requireNonNull(newStatus,"status must not be null");
+    this.status = newStatus;
   }
 
   public Set<OrderItem> getItems() {

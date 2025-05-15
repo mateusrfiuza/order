@@ -4,12 +4,11 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 import challenge.order.config.CreateOrderProperties;
 import challenge.order.domain.dataprovider.event.OrderCreatedEvent;
 import challenge.order.domain.dataprovider.event.OrderNotifier;
 import challenge.order.domain.dataprovider.repository.OrderRepository;
+import challenge.order.domain.entity.DomainPreconditions;
 import challenge.order.domain.exception.DuplicatedOrderException;
 import challenge.order.domain.service.CacheService;
 import challenge.order.domain.usecase.commands.CreateOrderCommand;
@@ -31,7 +30,7 @@ public class CreateOrderUseCase {
      */
     @Transactional
     public void execute(final CreateOrderCommand command) throws DuplicatedOrderException {
-        Objects.requireNonNull(command, "command cannot be null.");
+        DomainPreconditions.requireNonNull(command, "command must not be null");
         final var order = CreateOrderCommand.toDomain(command);
 
         var deduplicationKey = buildDeduplicationKey(command);
