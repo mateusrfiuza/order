@@ -13,11 +13,12 @@ public final class DomainPreconditions {
         return obj;
     }
 
-    public static void requireNonEmpty(Collection<?> coll, String message) {
-      if (coll == null || coll.isEmpty()) {
-        throw new IllegalArgumentException(message);
-      }
+  public static <C extends Collection<?>> C requireNonEmpty(C coll, String message) {
+    if (coll == null ||  coll.isEmpty()) {
+      throw new IllegalArgumentException(message);
     }
+    return coll;
+  }
 
     public static long requirePositive(Long value, String message) {
       if (value == null || value <= 0) {

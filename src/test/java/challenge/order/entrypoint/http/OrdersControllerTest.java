@@ -52,7 +52,6 @@ class OrdersControllerTest {
         UUID.randomUUID(),
         UUID.randomUUID(),
         Set.of(new OrderItem(UUID.randomUUID(), UUID.randomUUID(), 1L, BigDecimal.valueOf(10))),
-        BigDecimal.valueOf(10),
         OrderStatus.CREATED,
         Instant.now()
     );

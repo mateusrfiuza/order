@@ -23,7 +23,6 @@ public record CreateOrderCommand(
         command.customerId(),
         command.sellerId(),
         orderItems,
-        null,
         OrderStatus.CREATED,
         null
     );

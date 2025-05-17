@@ -38,7 +38,6 @@ class OrderTest {
         .isThrownBy(() -> new Order(
             id, customerId, sellerId,
             Set.of(item1),
-            BigDecimal.ZERO,
             null,
             createdAt
         ))
@@ -51,7 +50,6 @@ class OrderTest {
         .isThrownBy(() -> new Order(
             id, null, sellerId,
             Set.of(item1),
-            BigDecimal.ZERO,
             OrderStatus.CREATED,
             createdAt
         ))
@@ -64,7 +62,6 @@ class OrderTest {
         .isThrownBy(() -> new Order(
             id, customerId, null,
             Set.of(item1),
-            BigDecimal.ZERO,
             OrderStatus.CREATED,
             createdAt
         ))
@@ -77,7 +74,6 @@ class OrderTest {
         .isThrownBy(() -> new Order(
             id, customerId, sellerId,
             Set.of(),
-            BigDecimal.ZERO,
             OrderStatus.CREATED,
             createdAt
         ))
@@ -85,29 +81,31 @@ class OrderTest {
   }
 
   @Test
-  void constructor_withTotalPrice_usesProvidedTotal() {
-
-    var provided = BigDecimal.valueOf(123.45);
-    var order = new Order(
-        id, customerId, sellerId,
-        Set.of(item1, item2),
-        provided,
-        OrderStatus.CREATED,
-        createdAt
-    );
-    assertThat(order.getTotalPrice()).isEqualByComparingTo(provided);
-  }
-
-  @Test
   void constructor_withoutTotalPrice_recalculatesTotal() {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1, item2),
-        null,
         OrderStatus.CREATED,
         createdAt
     );
     assertThat(order.getTotalPrice()).isEqualByComparingTo(BigDecimal.valueOf(35));
+  }
+
+
+  @Test
+  void should_calculateTotalPrice_onlyOnceIfNoChanges() {
+    var order = new Order(
+        id, customerId, sellerId,
+        Set.of(item1, item2),
+        OrderStatus.CREATED,
+        createdAt
+    );
+
+    BigDecimal first = order.getTotalPrice();
+    BigDecimal second = order.getTotalPrice();
+
+    assertThat(order.getTotalPrice()).isEqualByComparingTo(BigDecimal.valueOf(35));
+    assertThat(second).isSameAs(first);
   }
 
   @Test
@@ -115,7 +113,6 @@ class OrderTest {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1),
-        null,
         OrderStatus.CREATED,
         createdAt
     );
@@ -132,7 +129,6 @@ class OrderTest {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1, item2),
-        null,
         OrderStatus.CREATED,
         createdAt
     );
@@ -144,17 +140,35 @@ class OrderTest {
   }
 
   @Test
-  void removeItem_nonExisting_doesNothing() {
+  void removeItem_nonExisting_throwsIllegalArgumentException() {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1),
-        null,
         OrderStatus.CREATED,
         createdAt
     );
-    var other = new OrderItem(null, UUID.randomUUID(), 2L, BigDecimal.valueOf(10));
+    var nonExistentItem = new OrderItem(null, UUID.randomUUID(), 2L, BigDecimal.valueOf(10));
 
-    order.removeItem(other);
+    assertThatIllegalArgumentException()
+        .isThrownBy(() -> order.removeItem(nonExistentItem))
+        .withMessage("item not found in the order");
+
+    assertThat(order.getItems()).containsExactly(item1);
+    assertThat(order.getTotalPrice()).isEqualByComparingTo(BigDecimal.valueOf(20));
+  }
+
+  @Test
+  void removeItem_null_throwsIllegalArgumentException() {
+    var order = new Order(
+        id, customerId, sellerId,
+        Set.of(item1),
+        OrderStatus.CREATED,
+        createdAt
+    );
+
+    assertThatIllegalArgumentException()
+        .isThrownBy(() -> order.removeItem(null))
+        .withMessage("item must not be null");
 
     assertThat(order.getItems()).containsExactly(item1);
     assertThat(order.getTotalPrice()).isEqualByComparingTo(BigDecimal.valueOf(20));
@@ -165,7 +179,6 @@ class OrderTest {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1),
-        null,
         OrderStatus.CREATED,
         createdAt
     );
@@ -180,7 +193,6 @@ class OrderTest {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1),
-        null,
         OrderStatus.CREATED,
         createdAt
     );
@@ -195,7 +207,6 @@ class OrderTest {
     var order = new Order(
         id, customerId, sellerId,
         Set.of(item1),
-        null,
         OrderStatus.CREATED,
         createdAt
     );
